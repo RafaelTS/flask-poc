@@ -1,31 +1,42 @@
-from flask import Flask, request
+from typing import Optional
+from flask import Flask, request, jsonify
 from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
 from pydantic import BaseModel
-from tinydb import TinyDB
+from tinydb import TinyDB, Query
 
 server = Flask(__name__)
 spec = FlaskPydanticSpec('flask', title='Poc Python-Flask')
 spec.register(server)
 database = TinyDB('database.json')
 
-class Pessoa(BaseModel) :
-    id: int
-    nome: str
-    idade: int
+class People(BaseModel) :
+    id: Optional[int]
+    name: str
+    age: int
 
-@server.get('/pessoas')
-def pegar_pessoas():
-    """Busca pessoas no banco de dados"""
-    return 'Vamos buscar os doletas'
+class Peoples(BaseModel) :
+    peoples: list[People]
+    count: int
 
-@server.post('/pessoas')
-@spec.validate(body=Request(Pessoa), resp=Response(HTTP_200=Pessoa))
+@server.get('/peoples')
+@spec.validate(resp=Response(HTTP_200=Peoples))
+def get_people():
+    """Return all people from my database"""
+    return jsonify(
+        Peoples(
+            peoples=database.all(),
+            count=len(database.all())
+        )
+    )
 
-def inserir_pessoa():
-    """Insere uma pessoa no banco de dados"""
+@server.post('/people')
+@spec.validate(body=Request(Peoples), resp=Response(HTTP_200=Peoples))
+
+def insert_people():
+    """Insert a people in the database"""
     body = request.context.body.dict()
     database.insert(body)
-    return body
-    
+    return body    
+
 
 server.run()
