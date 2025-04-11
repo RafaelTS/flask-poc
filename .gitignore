@@ -1,0 +1,18 @@
+# Ambientes virtuais
+venv/
+.venv/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários do editor
+*.swp
+*.swo
+
+# Configs do VSCode (opcional)
+.vscode/
