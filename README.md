@@ -5,10 +5,7 @@ Simple, yet very functional, creating a virtual environment to install only what
 
 Relevant libraries/technologies:
 
-Flask
-
-FlaskPydanticSpec
-
-pydantic
-
-tyni
+- Flask
+- FlaskPydanticSpec
+- pydantic
+- tyniDB
